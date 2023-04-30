@@ -29,14 +29,20 @@ listRef.addEventListener("click", (event) => {
   if (event.target.nodeName !== "IMG") {
     return;
   }
-  const instance = basicLightbox.create(`
-    <img src="${event.target.dataset.source}" width="800" height="800">
-`);
+  const instance = basicLightbox.create(
+    `<img src="${event.target.dataset.source}" width="800" height="600">`
+  );
   instance.show();
-
-  listRef.addEventListener("keydown", (event) => {
-    if (event.code === "Escape") {
-      instance.close();
-    }
-  });
+  document.addEventListener("keydown", (event) =>
+    onPressClose(event, instance)
+  );
 });
+
+function onPressClose(event, instance) {
+  if (event.code === "Escape") {
+    instance.close();
+    document.removeEventListener("keydown", (event) =>
+      onPressClose(event, instance)
+    );
+  }
+}
